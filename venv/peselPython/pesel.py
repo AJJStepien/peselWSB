@@ -1,7 +1,9 @@
 import datetime
 import sys
-from PyQt5.QtWidgets import * #QApplication, QWidget, QPushButton, QHBoxLayout, QGroupBox, QDialog, QVBoxLayout, QGridLayout, QLabel, QDateEdit
-from PyQt5.QtCore import pyqtSlot, QDate
+from PyQt5.QtWidgets import * # QApplication, QWidget, QPushButton, QHBoxLayout, QGroupBox, QDialog, QVBoxLayout, QGridLayout, QLabel, QDateEdit
+from PyQt5.QtCore import * # pyqtSlot, QDate
+from PyQt5.QtWidgets import QDialog
+
 sys.path.append("appLogic.py")
 from appLogic import PeselGen
 
@@ -9,11 +11,9 @@ from appLogic import PeselGen
 class Pesel(QDialog):
     def __init__(self):
         super().__init__()
+        self.frameGeometry().center()
+        self.setFixedSize(450,150)
         self.title = 'Generator PESEL'
-        self.left = 500
-        self.top = 300
-        self.width = 500
-        self.height = 100
 
         self.giveMeDateLbl = QLabel('Podaj datę urodzenia: ')
         self.dateEdit = QDateEdit()
@@ -29,6 +29,8 @@ class Pesel(QDialog):
 
 
         self.generateBtn = QPushButton('Generuj PESEL')
+        self.generateBtn.setStyleSheet("background-color: #dda15e")
+        self.generateBtn.setShortcut(' ')
         self.yourNewPeseLbl = QLabel("Twój nowy PESEL: ")
         self.newPeselLbl = QLabel("Nowy PESEL")
         self.copyPeselBtn = QPushButton("Kopiuj PESEL")
@@ -37,10 +39,9 @@ class Pesel(QDialog):
 
         self.initUI()
 
+
     def initUI(self):
         self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
-
         self.createGridLayout()
 
         windowLayout = QVBoxLayout()
@@ -58,7 +59,7 @@ class Pesel(QDialog):
         layout.setRowStretch(2,4)
 
         self.generateBtn.clicked.connect(self.onGenerateBtnClick)
-#        self.infoBtn.clicked.connect(self.onInfoBtnClick)
+        self.infoBtn.clicked.connect(self.onInfoBtnClick)
 
         layout.addWidget(self.giveMeDateLbl, 0, 0,1,2)
         layout.addWidget(self.dateEdit, 0, 2)
@@ -68,6 +69,7 @@ class Pesel(QDialog):
         layout.addWidget(self.copyPeselBtn,1,3)
         layout.addWidget(self.generateBtn, 2,0,1,3)
         layout.addWidget(self.infoBtn, 2,3)
+        self.generateBtn.setFocus()
 
         self.horizontalGroupBox.setLayout(layout)
 
@@ -75,15 +77,36 @@ class Pesel(QDialog):
     @pyqtSlot()
     def onGenerateBtnClick(self):
         date = self.dateEdit.date()
-        # dateStr = date.toString("yy-MM-dd")
         generator = PeselGen.generate(self,
                                       date.toString("yyyy"),
                                       date.toString("MM"),
                                       date.toString("dd"),
                                       self.sexChoice.currentData())
-        # self.newPeselLbl.setText(date.toString("yyMMdd"))
         self.newPeselLbl.setText(date.toString(generator))
 
+    def onInfoBtnClick(self):
+        infoTitle = "Informacje o autorze"
+        dialog = QDialog()
+        dialog.setFocus()
+        dialog.setWindowTitle(infoTitle)
+        dialog.setFixedSize(490,110)
+        layout = QGridLayout()
+
+        infoLbl = QLabel("Program stworzony w ramach ćwiczeń z zajęć \"Języki i inżynieria oprogramowania\" \n"
+                         "prowadzonych przez mgra Grzegorza Korzeniewskiego \n"
+                         "Rok akademicki 2020/2021\n\n"
+                         "Autor: Adam Stępień ")
+
+
+        infoLbl.setAlignment(Qt.AlignCenter)
+        layout.setAlignment(Qt.AlignCenter)
+
+        layout.addWidget(infoLbl,0,0,1,3)
+        dialog.setLayout(layout)
+
+        dialog.exec_()
+
+        dialog.show()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
