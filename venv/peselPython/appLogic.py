@@ -54,20 +54,22 @@ class PeselGen:
 
         controlCheck = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3]
         sum = 0
-        for i in birthDate:
+        for i in range(10):
             sum = sum + birthDate[i] * controlCheck[i]
-        print(sum)
-        birthDate.append(sum%10)
-        print(birthDate)
+            # print("cyfra: " + str(birthDate[i]) + " waga: " + str(controlCheck[i]) + " suma: " + str(
+            #     birthDate[i] * controlCheck[i]))
+        #print(sum)
+        modulo = sum % 10
+        if modulo == 0:
+            controlNumber = 0
+        else:
+            controlNumber = 10 - (modulo)
+        birthDate.append(controlNumber)
+        #print(birthDate)
 
         birthDateStr = ""
         for i in birthDate:
             birthDateStr = birthDateStr + str(i)
-        print("BirthDateStr " + birthDateStr)
+       # print("BirthDateStr " + birthDateStr)
 
         return birthDateStr
-
-        # print("trzy cyfry random: " + str(random.randrange(1000)).zfill(3))
-        # print("Parzyste - kobiety: " + str(random.randrange(0,10,2)))
-        # print("Nieparzyste - mężczyźni: " + str(random.randrange(1,10,2)))
-
