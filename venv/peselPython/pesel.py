@@ -2,18 +2,23 @@ import datetime
 import sys
 from PyQt5.QtWidgets import *  # QApplication, QWidget, QPushButton, QHBoxLayout, QGroupBox, QDialog, QVBoxLayout, QGridLayout, QLabel, QDateEdit
 from PyQt5.QtCore import *  # pyqtSlot, QDate
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtGui import QIcon
 
 sys.path.append("appLogic.py")
+sys.path.append("static/speedometer.png")
 from appLogic import PeselGen
 
 
 class Pesel(QDialog):
     def __init__(self):
         super().__init__()
+        self.initUI()
+
+    def initUI(self):
         self.frameGeometry().center()
         self.setFixedSize(450, 150)
         self.title = 'Generator PESEL'
+        self.icon = QIcon("static/speedometer.png")
 
         self.giveMeDateLbl = QLabel('Podaj datę urodzenia: ')
 
@@ -42,10 +47,8 @@ class Pesel(QDialog):
 
         self.infoBtn.setToolTip("Informacje o autorze")
 
-        self.initUI()
-
-    def initUI(self):
         self.setWindowTitle(self.title)
+        self.setWindowIcon(self.icon)
         self.createGridLayout()
 
         windowLayout = QVBoxLayout()
